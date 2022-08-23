@@ -9,7 +9,7 @@ const io = require('socket.io')(server)
 app.use(express.static(path.join(__dirname, '../public')));
 app.set('views', path.join(__dirname, '../public'));
 app.engine('html', require('ejs').renderFile)
-app.set('views engine', 'html')
+app.set('view engine', 'html')
 
 
 
@@ -21,8 +21,8 @@ io.on('connection', socket => {
     console.log(`Socket conectado: ${socket.id}`);
 
    socket.on('sendMessage', data => {
-      console.log(data);
+      console.log(data.id);
     });
   });
 
-server.listen(3000)
+server.listen(4000)
