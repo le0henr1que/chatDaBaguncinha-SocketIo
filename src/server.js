@@ -19,7 +19,9 @@ app.use('/', (req, res) => {
 
 let messagem = [];
 
+const users = {};
 
+let userOnline = []
 
 io.on('connection', socket => {
     console.log(`Socket conectado: ${socket.id}`);
@@ -27,6 +29,23 @@ io.on('connection', socket => {
    socket.on('sendMessage', data => {
       messagem.push(data)
       socket.broadcast.emit('receivedMessage', data)
+    });
+    socket.on('login', function(data){
+      console.log('a user ' + data.userId + ' connected');
+
+      // console.log(`users connected ${userOnline++ }`)
+      userOnline.push(data.userId)
+      console.log(JSON.stringify(userOnline))
+      // saving userId to object with socket ID
+      users[socket.id] = data.userId;
+    });
+  
+    socket.on('disconnect', function(){
+      console.log('user ' + users[socket.id] + ' disconnected');
+      // remove saved socket from users object
+      console.log(`users connected ${userOnline - 1}`)
+
+      delete users[socket.id];
     });
   });
 

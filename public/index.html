@@ -39,6 +39,7 @@
       }
     })
 
+
     $('#chat').submit( function(event) {
       event.preventDefault();
 
@@ -52,6 +53,8 @@
         };
         socket.emit('sendMessage', messageObject);
         renderMEssage(messageObject)
+        socket.emit('login',{userId:author});
+
 
       }
       
