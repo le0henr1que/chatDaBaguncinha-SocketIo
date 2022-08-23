@@ -17,11 +17,16 @@ app.use('/', (req, res) => {
     res.render('index.html')
 })
 
+let messagem = [];
+
+
+
 io.on('connection', socket => {
     console.log(`Socket conectado: ${socket.id}`);
-
+    socket.emit('previusMessages', messagem)
    socket.on('sendMessage', data => {
-      console.log(data.id);
+      messagem.push(data)
+      socket.broadcast.emit('receivedMessage', data)
     });
   });
 

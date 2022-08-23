@@ -23,7 +23,23 @@
   <script type="text/javascript">
     var socket = io('http://localhost:4000');
 
-    $('#chat').submit(function(event){
+
+    function renderMEssage(message){
+      $('.messages').append(`<div class="message"><strong>${message.author}: <strong/>${message.message}</div>`)
+    }
+
+    socket.on('receivedMessage', function(message){
+      renderMEssage(message)
+    })
+
+    socket.on('previusMessages', function(message){
+      for(message of message){
+        renderMEssage(message)
+
+      }
+    })
+
+    $('#chat').submit( function(event) {
       event.preventDefault();
 
       var author = $('input[name=username]').val();
@@ -35,10 +51,11 @@
           message:message
         };
         socket.emit('sendMessage', messageObject);
+        renderMEssage(messageObject)
 
       }
       
-    });
+    })
   </script>
 </body>
 </html>
