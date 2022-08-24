@@ -20,8 +20,8 @@ app.set('view engine', 'html')
 
 
 
-app.use('/', (req, res) => {
-    res.render('index.html')
+app.get('/', (req, res) => {
+    res.renderFile(__dirname+'/public/index.html')
 })
 
 let messagem = [];
