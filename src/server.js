@@ -2,11 +2,13 @@ const express = require('express')
 const path = require('path')
 const { fileURLToPath } = require('url')
 
+
+
 const app = express()
 const server = require('http').createServer(app)
 const io = require('socket.io')(server)
 
-const PORT = process.env.PORT || 4000
+const PORT = process.env.PORT || 3000;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename)
