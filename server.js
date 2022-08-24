@@ -6,7 +6,7 @@ const { fileURLToPath } = require('url')
 
 const app = express()
 const server = require('http').createServer(app)
-const io = require('socket.io')(server)
+const io = socketIO(server)
 
 const PORT = process.env.PORT || 3000;
 
