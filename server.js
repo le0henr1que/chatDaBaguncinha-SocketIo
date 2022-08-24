@@ -5,12 +5,14 @@ const { fileURLToPath } = require('url')
 
 
 const app = express()
-const server = require('https').createServer(app)
+var server = app.listen(app.get('port'), function() {
+  console.log('Node app is running on port', app.get('port'));
+});
+
+
+app.set('port', (process.env.PORT || 5000));
+
 const io = require('socket.io')(server)
-
-const PORT = process.env.PORT || 3000;
-
-
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname, 'public'));
@@ -53,6 +55,6 @@ io.on('connection', socket => {
     });
   });
 
-  app.listen(process.env.PORT || 3000, function(){
-    console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
-  });
+  // app.listen(process.env.PORT || 3000, function(){
+  //   console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
+  // });
