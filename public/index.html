@@ -13,20 +13,72 @@
   
 </head>
 <body>
-  <form id="chat">
+ 
+  <div class="container">
+    <div class="header">
+      <div class="grp-info">
+        <h3 class="grp-name">
+          Bate Papo 
+        </h3>
+      </div>
+    </div>
+  
+    <div class="chatbox messages">
+      <div class="chat">
+        <img src="https://i.ytimg.com/vi/e-J3hzc8kN8/mqdefault.jpg" alt="">
+        <p class="msg">
+          <strong style="font-size:16px">Leonardo</strong><br><br>
+
+          <ion-icon name="caret-back-outline"></ion-icon>
+            Solta o Verbo 😊
+        </p>
+      </div>
+  </div>
+
+  <div class="container">
+    <div class="footer">
+      <div class="grp-info"  style="width: 100%;">
+        <form id="chat" style="width: 100%;">
+          <!-- <input type="text"name="username"placeholder="Digite seu usuário"> -->
+          <div class="messages"></div>
+          <textarea type="text"name="message"placeholder="Digite sua mensagem" style="background:none; border:none; color:white; width:70%; height: 90%; box-shadow: 0 0 0 0; outline: 0; resize: none; border-radius: 5px;"></textarea>
+          <button type="submit" style="float:right; margin-top:10px; height: 30px; background: white; color:#4E1094; border:none; border-radius: 5px; width:90px; cursor:pointer;">Enviar</button>
+        </form>
+      </div>
+    </div>
+
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+  <!-- <form id="chat">
     <input type="text"name="username"placeholder="Digite seu usuário">
     <div class="messages"></div>
     <input type="text"name="message"placeholder="Digite sua mensagem">
     <button type="submit">Enviar</button>
 
-  </form>
+  </form> -->
   <script type="text/javascript">
     // var socket = io('http://localhost:4000');
-    var socket = io('https://chatsocketiodir.herokuapp.com/');
-
-
+    var socket = io('/');
+    
+    if(!localStorage.getItem('nome')){
+      let name = prompt('Digite seu Nome');
+      localStorage.setItem('nome', name)
+    }
+    
     function renderMEssage(message){
-      $('.messages').append(`<div class="message"><strong>${message.author}: <strong/>${message.message}</div>`)
+      // $('.messages').append(`<div class="message"><strong>${message.author}: <strong/>${message.message}</div>`)
+      $('.messages').append(`  
+      <div class="chat">
+        <img src="https://i.ytimg.com/vi/e-J3hzc8kN8/mqdefault.jpg" alt="">
+        <p class="msg">
+          <strong style="font-size:16px">${message.author}</strong><br><br>
+
+          <ion-icon name="caret-back-outline"></ion-icon>
+          ${message.message}
+        </p>
+      </div>`)
+
+      
     }
 
     socket.on('receivedMessage', function(message){
@@ -44,7 +96,7 @@
     $('#chat').submit( function(event) {
       event.preventDefault();
 
-      var author = $('input[name=username]').val();
+      var author = localStorage.getItem('nome');
       var message = $('input[name=message]').val();
 
       if(author.length && message.length){
