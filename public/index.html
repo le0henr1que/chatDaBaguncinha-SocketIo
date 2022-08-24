@@ -96,12 +96,12 @@
     $('#chat').submit( function(event) {
       event.preventDefault();
 
-      var author = localStorage.getItem('nome');
+      // var author = localStorage.getItem('nome');
       var message = $('input[name=message]').val();
 
-      if(author.length && message.length){
+      if(localStorage.getItem('nome') && message.length){
           var messageObject = {
-          author:author,
+          author:localStorage.getItem('nome'),
           message:message
         };
         socket.emit('sendMessage', messageObject);
