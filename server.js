@@ -27,34 +27,52 @@ app.get('/', (req, res) => {
 
 let messagem = [];
 
-const users = {};
+let users = [];
 
-
+//Conecta o socket
 io.on('connection', socket => {
 
+
+    users.push(socket.id)
+
+    console.log(users)
+
     console.log(`Socket conectado: ${socket.id}`);
+
+    //Carregando nmensagens no reload
     socket.emit('previusMessages', messagem)
-    
-    socket.on('sendMessage', data => {
+
+    //Carregando no front a quantidade de usuarios
+    socket.emit('users', users)
+
+    //Eitindo para o front as a quantidade de usuario
+    socket.broadcast.emit('recivedUsers', users)
+
+
+      //Enviando as mensagens para o front
+      socket.on('sendMessage', data => {
+        //Colocando os a dados da mensagem no front
         messagem.push(data)
         socket.broadcast.emit('receivedMessage', data)
       });
 
-    socket.on('login', function(data){
-      console.log('a user ' + data.userId + ' connected');
 
-      // saving userId to object with socket ID
-      users[socket.id] = data.userId;
-    });
-  
-    socket.on('disconnect', function(){
-      console.log('user ' + users[socket.id] + ' disconnected');
-      // remove saved socket from users object
+ 
+    // Gatilho para capturar a desconexão
+    socket.on('disconnect', function(data){
+      console.log('user ' + data + ' disconnected');
 
-      delete users[socket.id];
+    // Retirando do Array user disconectado
+      users.splice(users.indexOf(socket.id), 1);
+
+    // Enviar para o Front se o usuario desconectar
+      socket.emit('usersLogOut', users)
+      socket.broadcast.emit('recivedUsersLogOut', users)
+
+      
+
+      console.log(data)
+
     });
   });
 
-  // app.listen(process.env.PORT || 3000, function(){
-  //   console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
-  // });

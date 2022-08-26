@@ -13,19 +13,20 @@
   
 </head>
 <body>
- 
+  <div style="position:absolute; z-index:999;" class="notification">
+    
+  </div>  
   <div class="container">
     <div class="header">
       <div class="grp-info">
-        <h3 class="grp-name">
-          Bate Papo 
+        <h3 class="grp-name"  id="quantUser">
         </h3>
       </div>
     </div>
   
     <div class="chatbox" id="messages">
       <div class="chat">
-        <img src="https://i.ytimg.com/vi/e-J3hzc8kN8/mqdefault.jpg" alt="">
+        <!-- <img src="https://i.ytimg.com/vi/e-J3hzc8kN8/mqdefault.jpg" alt=""> -->
         <p class="msg">
           <strong style="font-size:16px">Leonardo</strong><br><br>
 
@@ -41,8 +42,8 @@
         <form id="chat" style="width: 100%;">
           <!-- <input type="text"name="username"placeholder="Digite seu usuário"> -->
           <div class="messages-input"></div>
-          <textarea type="text" name="message" placeholder="Digite sua mensagem" style="background:none; border:none; color:white; width:70%; height: 90%; box-shadow: 0 0 0 0; outline: 0; resize: none; border-radius: 5px;"></textarea>
-          <button type="submit" style="float:right; margin-top:10px; height: 30px; background: white; color:#4E1094; border:none; border-radius: 5px; width:90px; cursor:pointer;">Enviar</button>
+          <textarea type="text" id="text-mensagem" name="message" placeholder="Digite sua mensagem" style="background:none; border:none; color:white; width:70%; height: 90%; box-shadow: 0 0 0 0; outline: 0; resize: none; border-radius: 5px; font-size: 20px;"></textarea>
+          <button type="submit" style="float:right; margin-top:10px; height: 30px; background: white; color:#4E1094; border:none; border-radius: 5px; width:90px; cursor:pointer;" id="btn-enviar">Enviar</button>
         </form>
       </div>
     </div>
@@ -60,17 +61,28 @@
     // var socket = io('http://localhost:4000');
     var socket = io('/');
     
+    $(document).keypress(function(e) {
+        if(e.which == 13) $('#btn-enviar').click();
+    });
+
+   
+
     if(!localStorage.getItem('nome')){
       let name = prompt('Digite seu Nome');
       localStorage.setItem('nome', name)
+
+
+      $('.chatbox').scrollTop($('.chatbox').height() * $('.chatbox').height()); 
     }
     
+
     function renderMEssage(message){
       // $('.messages').append(`<div class="message"><strong>${message.author}: <strong/>${message.message}</div>`)
+
       $('#messages').append(`  
-      <div class="chat">s
-        <img src="https://i.ytimg.com/vi/e-J3hzc8kN8/mqdefault.jpg" alt="">
-        <p class="msg">
+      <div class="chat" >
+
+        <p class="msg" style="float: ${localStorage.getItem('nome') == message.author ? 'right' : 'left'} !important;">
           <strong style="font-size:16px">${message.author}</strong><br><br>
 
           <ion-icon name="caret-back-outline"></ion-icon>
@@ -80,14 +92,57 @@
 
       
     }
+    function renderNotification(mensagem){
+      $('.notification')
+      .append(`<div style="border:1px solid #FFF; padding:10px; color:white;width:200px; height: 50px; background:#8c58c8; position:relative; margin:10px; border-radius:5px;">
+          <p>${mensagem}</p>
+      </div>`)
+
+      setTimeout(function () {
+        $(".notification div:first").remove()
+      }, 1000); 
+    }
+    socket.on('users', function(users){
+        $("#quantUser").text(`Online: ${users.length}`)
+        renderNotification('Uma Pessoa Entrou!!')
+        console.log(users)
+      })
+
+      socket.on('recivedUsers', function(users){
+        $("#quantUser").text(`Online: ${users.length}`)
+        renderNotification('Uma Pessoa Entrou!!')
+        console.log(users)
+      })
+   
+      socket.on('usersLogOut', function(users){
+        $("#quantUser").text(`Online: ${users.length}`)
+        renderNotification('Uma Pessoa Saiu!!')
+        console.log(users)
+      })
+
+      socket.on('recivedUsersLogOut', function(users){
+        $("#quantUser").text(`Online: ${users.length}`)
+        renderNotification('Uma Pessoa Saiu!!')
+        console.log(users)
+      })
+   
+
+      
+  
 
     socket.on('receivedMessage', function(message){
+      // $("#quantUser").text(message.length)
       renderMEssage(message)
+      $('.chatbox').scrollTop($('.chatbox').height() * $('.chatbox').height()); 
+
     })
 
     socket.on('previusMessages', function(message){
+      // $("#quantUser").text(message.length)
+
       for(message of message){
         renderMEssage(message)
+        $('.chatbox').scrollTop($('.chatbox').height() * $('.chatbox').height()); 
 
       }
     })
@@ -106,7 +161,11 @@
         };
         socket.emit('sendMessage', messageObject);
         renderMEssage(messageObject)
-        socket.emit('login',{userId:author});
+
+
+        $('.chatbox').scrollTop($('.chatbox').height() * $('.chatbox').height()); 
+        $('#text-mensagem').val('')
+
 
 
       }

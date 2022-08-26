@@ -21,7 +21,7 @@
   font-weight: 300;
 }
 body {
-  background: #ffffff;
+  background: #3A384C;
   color: white;
 }
   
@@ -91,26 +91,25 @@ body {
 .chatbox {
   padding: 40px 20px;
   max-height: 450px;
-
+  
   display: flex;
   flex-direction: column;
   gap: 20px;
   overflow-y: scroll;
 }
 .chatbox .chat {
-  display: flex;
-  gap: 15px;
+  /* display: flex; */
 }
 .chatbox img {
   width: 45px;
   height: 45px;
   border-radius: 50%;
-  object-fit: cover;
+  /* object-fit: cover; */
   border: solid 2px white;
 }
 .chatbox .msg {
   background: #3a384c;
-  max-width: 80%;
+  /* max-width: 80%; */
   padding: 20px;
   border-radius: 10px;
   position: relative;
@@ -122,7 +121,7 @@ body {
   position: absolute;
   top: 10px;
 }
-.chatbox .chat:nth-child(even) {
+/* .chatbox .chat:nth-child(even) {
   flex-direction: row-reverse;
 }
 .chatbox .chat:nth-child(odd) ion-icon {
@@ -131,7 +130,7 @@ body {
 .chatbox .chat:nth-child(even) ion-icon {
   right: -14px;
   transform: rotate(180deg);
-}
+} */
 
 .policy {
   background: #3a384c;
